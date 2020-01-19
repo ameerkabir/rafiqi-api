@@ -3,6 +3,9 @@ import { fetchData, getEntrepreneurship, getBody } from "../helper";
 import opportunities from "../helper/data.json";
 import RafiqiContext from "../routes/context/rafiqi";
 import StagingRafiqiContext from "../routes/context/stagingRafiqi";
+import { checkSchema, validationResult } from "express-validator/check";
+import { validateFormOPtions } from "../helper/validation";
+
 export const homepage = (req, res) => {
   res.status(200).json("This is  Api");
 };
@@ -69,6 +72,7 @@ export const CreatStaging = async (req, res) => {
     "Full-time (30+ hours per week)": 3
   };
   try {
+    debugger;
     const opportunity = await req.body;
     debugger;
     const opportunityToSave = {
