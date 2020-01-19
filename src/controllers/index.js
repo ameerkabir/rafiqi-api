@@ -40,24 +40,44 @@ export const resultData = async (req, res) => {
 };
 export const CreatStaging = async (req, res) => {
   const themDictionary = {
-    business: 2,
-    "computer science": 3,
-    "software engineering": 4,
-    "data science": 5,
-    entrepreneurship: 6,
-    arts: 7,
-    languages: 8,
-    "social sciences": 9,
-    "manual services (cleaning, culinary)": 10
+    "entrepreneurship and incubation": 0,
+    "IT support and Networking": 1,
+    "Web/Mobile/Software development": 2,
+    "Data Analytics": 3,
+    "Artificial Intelligence": 4,
+    "Healthcare Professional": 5,
+    "None IT Engineer": 6,
+    "Skilled Trades(houseKeeper, plummer, electrician, agriculture)": 7,
+    Teaching: 8,
+    "Digital Marketing": 9,
+    "Sales Customer Service": 10,
+    "Artist & Creative Vocations(painter, poet)": 11,
+    "Content Manager(Writer, translator, content creator)": 12,
+    Legal: 13,
+    "Political & Social Science": 14,
+    "Social Worker": 15,
+    "Accounting And Finance": 16,
+    "Business And Management": 17,
+    "Scientific Research": 18,
+    "Other Research": 19,
+    Others: 20
+  };
+  const LevelDictionary = {
+    low: 1,
+    medium: 2,
+    high: 3,
+    "Full-time (30+ hours per week)": 3
   };
   try {
     const opportunity = await req.body;
+    debugger;
     const opportunityToSave = {
       ...opportunity,
-      cluster_nb: themDictionary[req.body.theme]
+      cluster_nb: themDictionary[req.body.theme],
+      level: LevelDictionary[req.body.candidateReadiness]
     };
-    console.log(opportunityToSave);
-
+    console.log(req.body);
+    //
     const result = await StagingRafiqiContext.create(opportunityToSave);
     return res.status(200).json({ opportunityToSave });
   } catch (e) {
