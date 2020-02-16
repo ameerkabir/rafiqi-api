@@ -3,9 +3,7 @@ import { fetchData, getEntrepreneurship, getBody } from "../helper";
 import opportunities from "../helper/data.json";
 import RafiqiContext from "../routes/context/rafiqi";
 import StagingRafiqiContext from "../routes/context/stagingRafiqi";
-import { checkSchema, validationResult } from "express-validator/check";
-import { validateFormOPtions } from "../helper/validation";
-
+import { themDictionary } from "../helper/OpportunitiesDictionary";
 export const homepage = (req, res) => {
   res.status(200).json("This is  Api");
 };
@@ -41,51 +39,55 @@ export const resultData = async (req, res) => {
     console.error(e);
   }
 };
+
 export const CreatStaging = async (req, res) => {
-  const themDictionary = {
-    "entrepreneurship and incubation": 0,
-    "IT support and Networking": 1,
-    "Web/Mobile/Software development": 2,
-    "Data Analytics": 3,
-    "Artificial Intelligence": 4,
-    "Healthcare Professional": 5,
-    "None IT Engineer": 6,
-    "Skilled Trades(houseKeeper, plummer, electrician, agriculture)": 7,
-    Teaching: 8,
-    "Digital Marketing": 9,
-    "Sales Customer Service": 10,
-    "Artist & Creative Vocations(painter, poet)": 11,
-    "Content Manager(Writer, translator, content creator)": 12,
-    Legal: 13,
-    "Political & Social Science": 14,
-    "Social Worker": 15,
-    "Accounting And Finance": 16,
-    "Business And Management": 17,
-    "Scientific Research": 18,
-    "Other Research": 19,
-    Others: 20
-  };
-  const LevelDictionary = {
-    low: 1,
-    medium: 2,
-    high: 3,
-    "Full-time (30+ hours per week)": 3
-  };
+  const {
+    OpportunityProvider,
+    OpportunityCategory,
+    deliveryMode,
+    theme,
+    OpportunityCountry,
+    city,
+    durationInMonths,
+    timeCommitmentPerWeek,
+    candidateReadiness,
+    local_lan_requirements,
+    en_requirements,
+    nextStartDate,
+    linkORContactToApply,
+    comments
+  } = req.body;
   try {
-    debugger;
-    const opportunity = await req.body;
-    debugger;
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString();
+    const validNextStartDate =
+      nextStartDate < formattedDate ? "" : nextStartDate || "";
+
     const opportunityToSave = {
-      ...opportunity,
-      cluster_nb: themDictionary[req.body.theme],
-      level: LevelDictionary[req.body.candidateReadiness]
+      opportunity_name: OpportunityProvider,
+      category: OpportunityCategory,
+      mode_of_delivery: deliveryMode,
+      theme: theme,
+      country: OpportunityCountry,
+      city: city || "",
+      level: themDictionary[candidateReadiness],
+      duration: durationInMonths,
+      full_or_part: themDictionary[timeCommitmentPerWeek],
+      info: linkORContactToApply || "",
+      comments: comments || "",
+      cluster_nb: themDictionary[theme],
+      local_lan_requirements: local_lan_requirements,
+      en_requirements: en_requirements,
+      start_date: validNextStartDate
     };
-    console.log(req.body);
-    //
+
     const result = await StagingRafiqiContext.create(opportunityToSave);
+    console.log(result);
+
     return res.status(200).json({ opportunityToSave });
   } catch (e) {
-    return res.status(500).json({ e });
+    console.log("error", e);
+    return res.status(500).send(e);
   }
 };
 export const AddOpportunity = async (req, res) => {

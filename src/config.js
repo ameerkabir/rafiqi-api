@@ -7,7 +7,7 @@ const config = {
   appUrl: process.env.APP_URL,
   jwtSecret: process.env.JWT_SECRET,
   db: {
-    name: process.env.DB_NAME,
+    name: process.env.DB_NAME || 'staging',
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     connection: process.env.DB_CONNECTION_STRING
