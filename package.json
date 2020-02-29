@@ -1,4 +1,4 @@
-{
+  {
   "name": "millennium-center-server",
   "version": "1.0.0",
   "description": "",
@@ -21,6 +21,7 @@
     "compression": "^1.7.3",
     "core-js": "2",
     "cors": "^2.8.5",
+    "date-fns": "^2.10.0",
     "deep-equal-in-any-order": "^1.0.13",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",

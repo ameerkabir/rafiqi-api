@@ -4,6 +4,7 @@ import opportunities from "../helper/data.json";
 import RafiqiContext from "../routes/context/rafiqi";
 import StagingRafiqiContext from "../routes/context/stagingRafiqi";
 import { themDictionary } from "../helper/OpportunitiesDictionary";
+import validateDate from "../helper/validation";
 export const homepage = (req, res) => {
   res.status(200).json("This is  Api");
 };
@@ -41,28 +42,24 @@ export const resultData = async (req, res) => {
 };
 
 export const CreatStaging = async (req, res) => {
-  const {
-    OpportunityProvider,
-    OpportunityCategory,
-    deliveryMode,
-    theme,
-    OpportunityCountry,
-    city,
-    durationInMonths,
-    timeCommitmentPerWeek,
-    candidateReadiness,
-    local_lan_requirements,
-    en_requirements,
-    nextStartDate,
-    linkORContactToApply,
-    comments
-  } = req.body;
   try {
-    const date = new Date();
-    const formattedDate = date.toLocaleDateString();
-    const validNextStartDate =
-      nextStartDate < formattedDate ? "" : nextStartDate || "";
-
+    const {
+      OpportunityProvider,
+      OpportunityCategory,
+      deliveryMode,
+      theme,
+      OpportunityCountry,
+      city,
+      durationInMonths,
+      timeCommitmentPerWeek,
+      candidateReadiness,
+      local_lan_requirements,
+      en_requirements,
+      nextStartDate,
+      linkORContactToApply,
+      comments
+    } = await req.body;
+    const formattedDate = validateDate(nextStartDate) ? nextStartDate : "";
     const opportunityToSave = {
       opportunity_name: OpportunityProvider,
       category: OpportunityCategory,
@@ -78,13 +75,12 @@ export const CreatStaging = async (req, res) => {
       cluster_nb: themDictionary[theme],
       local_lan_requirements: local_lan_requirements,
       en_requirements: en_requirements,
-      start_date: validNextStartDate
+      start_date: formattedDate
     };
-
+    console.log("opportunity provider", OpportunityProvider);
     const result = await StagingRafiqiContext.create(opportunityToSave);
-    console.log(result);
 
-    return res.status(200).json({ opportunityToSave });
+    return res.status(200).json(result);
   } catch (e) {
     console.log("error", e);
     return res.status(500).send(e);
